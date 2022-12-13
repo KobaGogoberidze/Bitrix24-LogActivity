@@ -25,7 +25,7 @@ class CBPWLogActivity extends CBPActivity
                 "Title" => array(
                     "Type" => FieldType::STRING
                 ),
-                "Conten" => array(
+                "Content" => array(
                     "Type" => FieldType::STRING
                 ),
                 "FilePath" => array(
@@ -41,6 +41,16 @@ class CBPWLogActivity extends CBPActivity
      */
     public function Execute()
     {
+        $file = fopen($_SERVER["DOCUMENT_ROOT"] . $this->FilePath, "a+");
+
+        $logContent = "\n--" . date("d/m/Y G:i:s") . "----------------------\n";
+        $logContent .= $this->Content;
+        $logContent .= "\n--------------------------------------------------\n";
+
+        fwrite($file, $logContent, true);
+        fclose($file);
+
+        return CBPActivityExecutionStatus::Closed;
     }
 
     /**
