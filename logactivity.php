@@ -1,6 +1,8 @@
 <?
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
+use Bitrix\Bizproc\FieldType;
+
 class CBPWLogActivity extends CBPActivity
 {
     /**
@@ -10,6 +12,27 @@ class CBPWLogActivity extends CBPActivity
      */
     public function __construct($name)
     {
+        parent::__construct($name);
+
+        $this->arProperties = array(
+            "Title" => "",
+            "Content" => "",
+            "FilePath" => "",
+        );
+
+        $this->SetPropertyTypes(
+            array(
+                "Title" => array(
+                    "Type" => FieldType::STRING
+                ),
+                "Conten" => array(
+                    "Type" => FieldType::STRING
+                ),
+                "FilePath" => array(
+                    "Type" => FieldType::STRING
+                )
+            )
+        );
     }
     /**
      * Start the execution of activity
