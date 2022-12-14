@@ -63,6 +63,7 @@ class CBPLogActivity extends CBPActivity
      * @param array $arWorkflowVariables
      * @param array $arCurrentValues
      * @param string $formName
+     * @return string
      */
     public static function GetPropertiesDialog($documentType, $activityName, $arWorkflowTemplate, $arWorkflowParameters, $arWorkflowVariables, $arCurrentValues = null, $formName = "")
     {
@@ -100,9 +101,51 @@ class CBPLogActivity extends CBPActivity
      * @param array &$arWorkflowParameters
      * @param array &$arWorkflowVariables
      * @param array &$arCurrentValues
-     * @param array &$errors
+     * @param array &$arErrors
+     * @return boolean
      */
-    public static function GetPropertiesDialogValues($documentType, $activityName, &$arWorkflowTemplate, &$arWorkflowParameters, &$arWorkflowVariables, $arCurrentValues, &$errors)
+    public static function GetPropertiesDialogValues($documentType, $activityName, &$arWorkflowTemplate, &$arWorkflowParameters, &$arWorkflowVariables, $arCurrentValues, &$arErrors)
     {
+        $arProperties = array(
+            "Content" => $arCurrentValues["Content"],
+            "FilePath" => $arCurrentValues["FilePath"]
+        );
+
+        $arErrors = self::ValidateProperties($arProperties, new CBPWorkflowTemplateUser(CBPWorkflowTemplateUser::CurrentUser));
+        if (count($arErrors) > 0) {
+            return false;
+        }
+
+        $currentActivity = &CBPWorkflowTemplateLoader::FindActivityByName($arWorkflowTemplate, $activityName);
+        $currentActivity["Properties"] = $properties;
+
+        return true;
+    }
+
+    /**
+     * Validate properties
+     * 
+     * @param array $arTestProperties
+     * @param CBPWorkflowTemplateUser $user
+     * @return array
+     */
+
+    public static function ValidateProperties($arTestProperties = array(), CBPWorkflowTemplateUser $user = null)
+    {
+        $arErrors = array();
+
+        if (empty($arTestProperties["Content"])) {
+            $arErrors[] = array(
+                "code" => "emptyText",
+                "message" => GetMessage("CONTENT_EMPTY"),
+            );
+        }
+        if (empty($arTestProperties["FilePath"])) {
+            $arErrors[] = array(
+                "code" => "emptyText",
+                "message" => GetMessage("FILE_PATH_EMPTY"),
+            );
+        }
+        return array_merge($arErrors, parent::ValidateProperties($arTestProperties, $user));
     }
 }
