@@ -2,10 +2,10 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 $arActivityDescription = array(
-    "NAME" => GetMessage("ACTIVITY_NAME"),
-    "DESCRIPTION" => GetMessage("ACTIVITY_DESCR"),
+    "NAME" => GetMessage("JC_WL2F_NAME"),
+    "DESCRIPTION" => GetMessage("JC_WL2F_DESCRIPTION"),
     "TYPE" => "activity",
-    "CLASS" => "LogActivity",
+    "CLASS" => "JCWriteInFileActivity",
     "JSCLASS" => "BizProcActivity",
     "CATEGORY" => array(
         "ID" => "other",
