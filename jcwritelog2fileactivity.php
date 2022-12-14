@@ -3,7 +3,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Bizproc\FieldType;
 
-class CBPJCWriteInFileActivity extends CBPActivity
+class CBPJCWriteLog2FileActivity extends CBPActivity
 {
     /**
      * Initialize activity
@@ -36,13 +36,13 @@ class CBPJCWriteInFileActivity extends CBPActivity
      */
     public function Execute()
     {
-        $file = fopen($_SERVER["DOCUMENT_ROOT"] . $this->FilePath, "a+");
+        $file = fopen($_SERVER["DOCUMENT_ROOT"] . "/" . $this->FilePath, "a+");
 
         $logContent = "\n--" . date("d/m/Y G:i:s") . "-----------------------------\n";
         $logContent .= $this->Content;
         $logContent .= "\n--------------------------------------------------\n";
 
-        fwrite($file, $logContent, true);
+        fwrite($file, $logContent);
         fclose($file);
 
         return CBPActivityExecutionStatus::Closed;
