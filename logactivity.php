@@ -3,7 +3,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
 use Bitrix\Bizproc\FieldType;
 
-class CBPWLogActivity extends CBPActivity
+class CBPLogActivity extends CBPActivity
 {
     /**
      * Initialize activity
@@ -64,8 +64,31 @@ class CBPWLogActivity extends CBPActivity
      * @param array $arCurrentValues
      * @param string $formName
      */
-    public static function GetPropertiesDailog($documentType, $activityName, $arWorkflowTemplate, $arWorkflowParameters, $arWorkflowVariables, $arCurrentValues = null, $formName = "")
+    public static function GetPropertiesDialog($documentType, $activityName, $arWorkflowTemplate, $arWorkflowParameters, $arWorkflowVariables, $arCurrentValues = null, $formName = "")
     {
+        $runtime = CBPRuntime::GetRuntime();
+
+        if (!is_array($arCurrentValues)) {
+            $arCurrentValues = array(
+                "Content" => "",
+                "FilePath" => ""
+            );
+
+            $arCurrentActivity = &CBPWorkflowTemplateLoader::FindActivityByName($arWorkflowTemplate, $activityName);
+            if (is_array($arCurrentActivity["Properties"])) {
+                $arCurrentValues["Content"] = $arCurrentActivity["Properties"]["Text"];
+                $arCurrentValues["FilePath"] = $arCurrentActivity["Properties"]["FilePath"];
+            }
+        }
+
+        return $runtime->ExecuteResourceFile(
+            __FILE__,
+            "properties_dialog.php",
+            array(
+                "arCurrentValues" => $arCurrentValues,
+                "formName" => $formName,
+            )
+        );
     }
 
     /**
